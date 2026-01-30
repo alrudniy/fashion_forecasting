@@ -1,20 +1,43 @@
-# Time Series Analysis - Univariate and Multivariate Models
+# Time Series Analysis - Univariate and Multivariate Models (V2)
 # Pass 1: All methods UNIVARIATE (Amazon Rank only)
 # Pass 2: All methods MULTIVARIATE (Amazon Rank + Twitter Volume)
-# Runs VECM, LINEAR, and NNET models for lags 1-5
+# Runs VECM, VAR (lineVar), and MLP (nnfor) models for lags 1-5
+#
+# Changes from v1:
+# - LINEAR replaced with lineVar (proper VAR implementation)
+# - NNET replaced with nnfor::mlp() with xreg for multivariate support
+# - Univariate VECM uses pseudo-multivariate (series + lagged self)
 
 library(readr)
 library(dplyr)
 library(tsDyn)
+library(nnfor)
+library(forecast)
+
+# Helper function to calculate accuracy metrics manually for MLP forecasts
+calc_accuracy <- function(pred, actual) {
+  errors <- actual - pred
+  mae <- mean(abs(errors))
+  mse <- mean(errors^2)
+  rmse <- sqrt(mse)
+  mape <- mean(abs(errors / actual)) * 100
+  # Theil's U
+  n <- length(actual)
+  num <- sqrt(mean(errors^2))
+  denom <- sqrt(mean(actual^2)) + sqrt(mean(pred^2))
+  theil_u <- num / denom
+  
+  return(c(MAE = mae, MSE = mse, RMSE = rmse, MAPE = mape, TheilU = theil_u))
+}
 
 processAllFiles <- function(fname) {
   fname <- paste0("./datasets/", fname)
   
-  write(paste0("Starting ", fname), file = "./results/R_logging_uni_multi.txt", append = TRUE, sep = "\t")
+  write(paste0("Starting ", fname), file = "./results/R_logging_uni_multi_v2.txt", append = TRUE, sep = "\t")
   
   input <- gsub("./datasets/", "", fname)
   input <- gsub(".csv", "", input)
-  outfile <- "./results/results_all_R_uni_multi.txt"
+  outfile <- "./results/results_all_R_uni_multi_v2.txt"
   
   # Read and prepare data
   df <- read_csv(fname, col_names = TRUE)
@@ -25,17 +48,29 @@ processAllFiles <- function(fname) {
   amazon <- ts(df[, c("avgRnkWeek")], frequency = 1)
   twitter <- ts(df[, c("N_Tweets")], frequency = 1)
   ts_data_mv <- ts(df[, c("avgRnkWeek", "N_Tweets")], frequency = 1)  # multivariate
-  ts_data_uv <- ts(df[, c("avgRnkWeek")], frequency = 1)              # univariate
+  
+  # Create pseudo-multivariate for univariate VECM: series + its lag
+  # This allows VECM to run on "univariate" data by testing cointegration with lagged self
+  amazon_vec <- as.numeric(amazon)
+  amazon_with_lag <- ts(cbind(
+    amazon_vec[2:length(amazon_vec)],           # y(t)
+    amazon_vec[1:(length(amazon_vec) - 1)]      # y(t-1)
+  ), frequency = 1)
+  colnames(amazon_with_lag) <- c("amazon", "amazon_lag1")
   
   nrows <- nrow(df)
   split <- (nrows - 8)  # forecast for 8 weeks
   hVal <- 8
   
+  # Adjusted split for lagged univariate (one fewer observation)
+  nrows_lag <- nrow(amazon_with_lag)
+  split_lag <- nrows_lag - 8
+  
   # Train/test split
-  amazon.train <- amazon[1:split]
+  amazon.train <- ts(amazon[1:split], frequency = 1)
   amazon.test <- amazon[(split + 1):nrows]
   
-  twitter.train <- twitter[1:split]
+  twitter.train <- ts(twitter[1:split], frequency = 1)
   twitter.test <- twitter[(split + 1):nrows]
   
   # Multivariate train/test
@@ -49,16 +84,18 @@ processAllFiles <- function(fname) {
   ##################################################################################
   
   # --------------------------------------------------------------------------
-  # Univariate: VECM for lags 1-5 (single variable)
+  # Univariate: VECM for lags 1-5 (using amazon + amazon_lag1 pseudo-multivariate)
+  # r=1 since we have 2 "variables" (series and its lag)
   # --------------------------------------------------------------------------
   for (lag in 1:5) {
     tryCatch({
-      mod_vec <- VECM(ts_data_uv, lag = lag)
+      mod_vec <- VECM(amazon_with_lag, lag = lag, r = 1)
       preds_roll <- predict_rolling(mod_vec, nroll = hVal)
       acc <- accuracy_stat(object = preds_roll$pred, true = preds_roll$true)
       
+      # Extract accuracy for first variable (amazon) - indices 1,4,7,10,13
       message <- paste(input, "Univariate Amazon", paste0("VECM, lag=", lag), 
-                       paste(acc[c(1:5)], collapse = "\t"), sep = "\t")
+                       paste(acc[c(1, 4, 7, 10, 13)], collapse = "\t"), sep = "\t")
       write(message, file = outfile, append = TRUE, sep = "\t")
     }, error = function(e) {
       message <- paste(input, "Univariate Amazon", paste0("VECM, lag=", lag), 
@@ -68,46 +105,42 @@ processAllFiles <- function(fname) {
   }
   
   # --------------------------------------------------------------------------
-  # Univariate: LINEAR for lags 1-5
+  # Univariate: VAR (lineVar) for lags 1-5
+  # For univariate, lineVar becomes an AR model
   # --------------------------------------------------------------------------
   for (lag in 1:5) {
     tryCatch({
-      if (lag == 1) {
-        mod <- linear(amazon.train, m = 3)
-      } else {
-        mod <- linear(amazon.train, m = 3, d = lag)
-      }
-      preds_roll <- predict_rolling(mod, newdata = amazon.test)
+      # lineVar on univariate data acts as AR model
+      mod_var <- lineVar(amazon, lag = lag)
+      preds_roll <- predict_rolling(mod_var, nroll = hVal)
       acc <- accuracy_stat(object = preds_roll$pred, true = preds_roll$true)
       
-      message <- paste(input, "Univariate Amazon", paste0("LINEAR, lag=", lag), 
+      message <- paste(input, "Univariate Amazon", paste0("VAR, lag=", lag), 
                        paste(acc[c(1:5)], collapse = "\t"), sep = "\t")
       write(message, file = outfile, append = TRUE, sep = "\t")
     }, error = function(e) {
-      message <- paste(input, "Univariate Amazon", paste0("LINEAR, lag=", lag), 
+      message <- paste(input, "Univariate Amazon", paste0("VAR, lag=", lag), 
                        "ERROR", e$message, sep = "\t")
       write(message, file = outfile, append = TRUE, sep = "\t")
     })
   }
   
   # --------------------------------------------------------------------------
-  # Univariate: NNET for lags 1-5
+  # Univariate: MLP (nnfor::mlp) for lags 1-5
+  # No xreg for univariate - just the series itself
   # --------------------------------------------------------------------------
   for (lag in 1:5) {
     tryCatch({
-      if (lag == 1) {
-        mod <- nnetTs(amazon.train, m = 2, size = 2)
-      } else {
-        mod <- nnetTs(amazon.train, m = 2, size = 2, d = lag)
-      }
-      preds_roll <- predict_rolling(mod, newdata = amazon.test)
-      acc <- accuracy_stat(object = preds_roll$pred, true = preds_roll$true)
+      # mlp with specified lags
+      mod_mlp <- mlp(amazon.train, lags = 1:lag, hd = 2, reps = 5)
+      pred_mlp <- forecast(mod_mlp, h = hVal)
+      acc <- calc_accuracy(as.numeric(pred_mlp$mean), as.numeric(amazon.test))
       
-      message <- paste(input, "Univariate Amazon", paste0("NNET, lag=", lag), 
-                       paste(acc[c(1:5)], collapse = "\t"), sep = "\t")
+      message <- paste(input, "Univariate Amazon", paste0("MLP, lag=", lag), 
+                       paste(acc, collapse = "\t"), sep = "\t")
       write(message, file = outfile, append = TRUE, sep = "\t")
     }, error = function(e) {
-      message <- paste(input, "Univariate Amazon", paste0("NNET, lag=", lag), 
+      message <- paste(input, "Univariate Amazon", paste0("MLP, lag=", lag), 
                        "ERROR", e$message, sep = "\t")
       write(message, file = outfile, append = TRUE, sep = "\t")
     })
@@ -122,10 +155,11 @@ processAllFiles <- function(fname) {
   # --------------------------------------------------------------------------
   for (lag in 1:5) {
     tryCatch({
-      mod_vec <- VECM(ts_data_mv, lag = lag)
+      mod_vec <- VECM(ts_data_mv, lag = lag, r = 1)
       preds_roll <- predict_rolling(mod_vec, nroll = hVal)
       acc <- accuracy_stat(object = preds_roll$pred, true = preds_roll$true)
       
+      # Extract accuracy for first variable (Amazon) - indices 1,4,7,10,13
       message <- paste(input, "Multivariate Amzn+Twttr", paste0("VECM, lag=", lag), 
                        paste(acc[c(1, 4, 7, 10, 13)], collapse = "\t"), sep = "\t")
       write(message, file = outfile, append = TRUE, sep = "\t")
@@ -137,46 +171,45 @@ processAllFiles <- function(fname) {
   }
   
   # --------------------------------------------------------------------------
-  # Multivariate: LINEAR (VAR-style) for lags 1-5
+  # Multivariate: VAR (lineVar) for lags 1-5
   # --------------------------------------------------------------------------
   for (lag in 1:5) {
     tryCatch({
-      if (lag == 1) {
-        mod <- linear(mvts.train, m = 3)
-      } else {
-        mod <- linear(mvts.train, m = 3, d = lag)
-      }
-      preds_roll <- predict_rolling(mod, newdata = mvts.test)
+      mod_var <- lineVar(ts_data_mv, lag = lag)
+      preds_roll <- predict_rolling(mod_var, nroll = hVal)
       acc <- accuracy_stat(object = preds_roll$pred, true = preds_roll$true)
       
-      message <- paste(input, "Multivariate Amzn+Twttr", paste0("LINEAR, lag=", lag), 
+      # Extract accuracy for first variable (Amazon) - indices 1,4,7,10,13
+      message <- paste(input, "Multivariate Amzn+Twttr", paste0("VAR, lag=", lag), 
                        paste(acc[c(1, 4, 7, 10, 13)], collapse = "\t"), sep = "\t")
       write(message, file = outfile, append = TRUE, sep = "\t")
     }, error = function(e) {
-      message <- paste(input, "Multivariate Amzn+Twttr", paste0("LINEAR, lag=", lag), 
+      message <- paste(input, "Multivariate Amzn+Twttr", paste0("VAR, lag=", lag), 
                        "ERROR", e$message, sep = "\t")
       write(message, file = outfile, append = TRUE, sep = "\t")
     })
   }
   
   # --------------------------------------------------------------------------
-  # Multivariate: NNET for lags 1-5
+  # Multivariate: MLP (nnfor::mlp) with xreg for lags 1-5
+  # Uses Twitter as external regressor to predict Amazon
   # --------------------------------------------------------------------------
   for (lag in 1:5) {
     tryCatch({
-      if (lag == 1) {
-        mod <- nnetTs(mvts.train, m = 2, size = 2)
-      } else {
-        mod <- nnetTs(mvts.train, m = 2, size = 2, d = lag)
-      }
-      preds_roll <- predict_rolling(mod, newdata = mvts.test)
-      acc <- accuracy_stat(object = preds_roll$pred, true = preds_roll$true)
+      # Create lagged xreg matrix for Twitter
+      # mlp uses xreg for external regressors
+      xreg_train <- as.matrix(twitter.train)
+      xreg_test <- as.matrix(twitter.test)
       
-      message <- paste(input, "Multivariate Amzn+Twttr", paste0("NNET, lag=", lag), 
-                       paste(acc[c(1, 4, 7, 10, 13)], collapse = "\t"), sep = "\t")
+      mod_mlp <- mlp(amazon.train, lags = 1:lag, xreg = xreg_train, hd = 2, reps = 5)
+      pred_mlp <- forecast(mod_mlp, h = hVal, xreg = xreg_test)
+      acc <- calc_accuracy(as.numeric(pred_mlp$mean), as.numeric(amazon.test))
+      
+      message <- paste(input, "Multivariate Amzn+Twttr", paste0("MLP, lag=", lag), 
+                       paste(acc, collapse = "\t"), sep = "\t")
       write(message, file = outfile, append = TRUE, sep = "\t")
     }, error = function(e) {
-      message <- paste(input, "Multivariate Amzn+Twttr", paste0("NNET, lag=", lag), 
+      message <- paste(input, "Multivariate Amzn+Twttr", paste0("MLP, lag=", lag), 
                        "ERROR", e$message, sep = "\t")
       write(message, file = outfile, append = TRUE, sep = "\t")
     })
