@@ -4,9 +4,9 @@ Fashion Sales Forecasting with Time Series Models
 # INSTALL DEPENDENCIES
 # pip install pandas numpy statsmodels scikit-learn 
 
-This script replicates the R-based analysis for forecasting Amazon product 
-popularity (N_ASINs in each bucket) using Twitter mention intensity as an 
-exogenous variable.
+This script replicates the R-based analysis for forecasting Amazon average 
+sales rank (avgRnkWeek) within each bucket using Twitter mention intensity 
+as an exogenous variable.
 
 Models:
 - VECM (Vector Error Correction Model) - Multivariate (Amazon + Twitter)
@@ -60,7 +60,7 @@ CONFIG = {
     'min_observations': 50,  # Minimum data points required
     'min_nonzero_tweets': 10,  # Minimum weeks with tweets > 0
     # Target variable: 'avgRnkWeek' for sales rank, 'N_ASINs' for product count
-    'target_variable': 'N_ASINs',
+    'target_variable': 'avgRnkWeek',
 }
 
 # List of dataset files to process
@@ -433,17 +433,18 @@ def process_file(filepath: str, config: Dict) -> List[Dict]:
         print(f"Error loading {filepath}: {e}")
         return results
     
-    # Determine target variable
+    # Determine target variable - prioritize avgRnkWeek to match R code
     target_var = config.get('target_variable', 'avgRnkWeek')
     
-    # Check for required columns - support both old and new formats
-    if target_var == 'avgRnkWeek' and 'avgRnkWeek' in df.columns:
+    # Check for required columns - support both formats
+    if 'avgRnkWeek' in df.columns:
+        target_var = 'avgRnkWeek'
         required_cols = ['yearWeek', 'avgRnkWeek', 'N_Tweets']
-    elif 'N_ASINs' in df.columns:
-        target_var = 'N_ASINs'
+    elif 'N_ASINs' in df.columns and target_var == 'N_ASINs':
         required_cols = ['yearWeek', 'N_ASINs', 'N_Tweets']
     else:
         print(f"Missing required columns in {filepath}. Available: {df.columns.tolist()}")
+        print(f"  Expected 'avgRnkWeek' or 'N_ASINs' column for target variable.")
         return results
     
     # Select columns
@@ -479,7 +480,7 @@ def process_file(filepath: str, config: Dict) -> List[Dict]:
             metrics = calculate_accuracy_metrics(actuals, preds)
             results.append({
                 'dataset': dataset_name,
-                'model_type': 'Multivariate Target+Twitter',
+                'model_type': 'Multivariate Amzn Twttr',
                 'model': f'VECM, lag={lag}',
                 'lag': lag,
                 **metrics
@@ -496,7 +497,7 @@ def process_file(filepath: str, config: Dict) -> List[Dict]:
             metrics = calculate_accuracy_metrics(actuals, preds)
             results.append({
                 'dataset': dataset_name,
-                'model_type': 'Univariate Target',
+                'model_type': 'Univariate Amazon',
                 'model': f'LINEAR, lag={lag}',
                 'lag': lag,
                 **metrics
@@ -513,7 +514,7 @@ def process_file(filepath: str, config: Dict) -> List[Dict]:
             metrics = calculate_accuracy_metrics(actuals, preds)
             results.append({
                 'dataset': dataset_name,
-                'model_type': 'Univariate Target',
+                'model_type': 'Univariate Amazon',
                 'model': f'NNET, lag={lag}',
                 'lag': lag,
                 **metrics
