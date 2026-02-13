@@ -1,0 +1,202 @@
+Starting ./datasets_with_GT/beige_0..1000.csv
+  Keyword: beige, GT column: GT_beige
+Starting ./datasets_with_GT/beige_300000+.csv
+  Keyword: beige, GT column: GT_beige
+Starting ./datasets_with_GT/black_0..1000.csv
+  Keyword: black, GT column: GT_black
+Starting ./datasets_with_GT/black_001001..5000.csv
+  Keyword: black, GT column: GT_black
+Starting ./datasets_with_GT/black_005001..10000.csv
+  Keyword: black, GT column: GT_black
+Starting ./datasets_with_GT/black_010001..20000.csv
+  Keyword: black, GT column: GT_black
+Starting ./datasets_with_GT/black_020001..30000.csv
+  Keyword: black, GT column: GT_black
+Starting ./datasets_with_GT/black_030001..40000.csv
+  Keyword: black, GT column: GT_black
+Starting ./datasets_with_GT/black_150001..200000.csv
+  Keyword: black, GT column: GT_black
+Starting ./datasets_with_GT/black_300000+.csv
+  Keyword: black, GT column: GT_black
+Starting ./datasets_with_GT/blue_0..1000.csv
+  Keyword: blue, GT column: GT_blue
+Starting ./datasets_with_GT/blue_300000+.csv
+  Keyword: blue, GT column: GT_blue
+Starting ./datasets_with_GT/bright_0..1000.csv
+  Keyword: bright, GT column: GT_bright
+Starting ./datasets_with_GT/bright_001001..5000.csv
+  Keyword: bright, GT column: GT_bright
+Starting ./datasets_with_GT/bright_300000+.csv
+  Keyword: bright, GT column: GT_bright
+Starting ./datasets_with_GT/burgundy_001001..5000.csv
+  Keyword: burgundy, GT column: GT_burgundy
+Starting ./datasets_with_GT/cotton_0..1000.csv
+  Keyword: cotton, GT column: GT_cotton
+Starting ./datasets_with_GT/cotton_001001..5000.csv
+  Keyword: cotton, GT column: GT_cotton
+Starting ./datasets_with_GT/cotton_005001..10000.csv
+  Keyword: cotton, GT column: GT_cotton
+Starting ./datasets_with_GT/cotton_010001..20000.csv
+  Keyword: cotton, GT column: GT_cotton
+Starting ./datasets_with_GT/cotton_020001..30000.csv
+  Keyword: cotton, GT column: GT_cotton
+Starting ./datasets_with_GT/cotton_030001..40000.csv
+  Keyword: cotton, GT column: GT_cotton
+Starting ./datasets_with_GT/cotton_150001..200000.csv
+  Keyword: cotton, GT column: GT_cotton
+Starting ./datasets_with_GT/cotton_300000+.csv
+  Keyword: cotton, GT column: GT_cotton
+Starting ./datasets_with_GT/crop-top_0..1000.csv
+  Keyword: crop-top, GT column: GT_crop-top
+Starting ./datasets_with_GT/crop-top_010001..20000.csv
+  Keyword: crop-top, GT column: GT_crop-top
+Starting ./datasets_with_GT/fade_001001..5000.csv
+  Keyword: fade, GT column: GT_fade
+Starting ./datasets_with_GT/floral_0..1000.csv
+  Keyword: floral, GT column: GT_floral
+Starting ./datasets_with_GT/floral_001001..5000.csv
+  Keyword: floral, GT column: GT_floral
+Starting ./datasets_with_GT/floral_005001..10000.csv
+  Keyword: floral, GT column: GT_floral
+Starting ./datasets_with_GT/floral_010001..20000.csv
+  Keyword: floral, GT column: GT_floral
+Starting ./datasets_with_GT/floral_300000+.csv
+  Keyword: floral, GT column: GT_floral
+Starting ./datasets_with_GT/green_010001..20000.csv
+  Keyword: green, GT column: GT_green
+Starting ./datasets_with_GT/green_300000+.csv
+  Keyword: green, GT column: GT_green
+Starting ./datasets_with_GT/grey_010001..20000.csv
+  Keyword: grey, GT column: GT_grey
+Starting ./datasets_with_GT/grey_020001..30000.csv
+  Keyword: grey, GT column: GT_grey
+Starting ./datasets_with_GT/grey_300000+.csv
+  Keyword: grey, GT column: GT_grey
+Starting ./datasets_with_GT/high-waist_001001..5000.csv
+  Keyword: high-waist, GT column: GT_high-waist
+Starting ./datasets_with_GT/high-waist_005001..10000.csv
+  Keyword: high-waist, GT column: GT_high-waist
+Starting ./datasets_with_GT/high-waist_010001..20000.csv
+  Keyword: high-waist, GT column: GT_high-waist
+Starting ./datasets_with_GT/high-waist_300000+.csv
+  Keyword: high-waist, GT column: GT_high-waist
+Starting ./datasets_with_GT/lace-up_0..1000.csv
+  Keyword: lace-up, GT column: GT_lace-up
+Starting ./datasets_with_GT/lace-up_001001..5000.csv
+  Keyword: lace-up, GT column: GT_lace-up
+Starting ./datasets_with_GT/lace-up_005001..10000.csv
+  Keyword: lace-up, GT column: GT_lace-up
+Starting ./datasets_with_GT/lace-up_300000+.csv
+  Keyword: lace-up, GT column: GT_lace-up
+Starting ./datasets_with_GT/long-sleeve_010001..20000.csv
+  Keyword: long-sleeve, GT column: GT_long-sleeve
+Starting ./datasets_with_GT/long-sleeve_020001..30000.csv
+  Keyword: long-sleeve, GT column: GT_long-sleeve
+Starting ./datasets_with_GT/long-sleeve_300000+.csv
+  Keyword: long-sleeve, GT column: GT_long-sleeve
+Starting ./datasets_with_GT/navy_001001..5000.csv
+  Keyword: navy, GT column: GT_navy
+Starting ./datasets_with_GT/navy_300000+.csv
+  Keyword: navy, GT column: GT_navy
+Starting ./datasets_with_GT/nude_300000+.csv
+  Keyword: nude, GT column: GT_nude
+Starting ./datasets_with_GT/nylon_0..1000.csv
+  Keyword: nylon, GT column: GT_nylon
+Starting ./datasets_with_GT/nylon_005001..10000.csv
+  Keyword: nylon, GT column: GT_nylon
+Starting ./datasets_with_GT/nylon_010001..20000.csv
+  Keyword: nylon, GT column: GT_nylon
+Starting ./datasets_with_GT/nylon_020001..30000.csv
+  Keyword: nylon, GT column: GT_nylon
+Starting ./datasets_with_GT/nylon_150001..200000.csv
+  Keyword: nylon, GT column: GT_nylon
+Starting ./datasets_with_GT/nylon_200001..250000.csv
+  Keyword: nylon, GT column: GT_nylon
+Starting ./datasets_with_GT/nylon_300000+.csv
+  Keyword: nylon, GT column: GT_nylon
+Starting ./datasets_with_GT/patch_300000+.csv
+  Keyword: patch, GT column: GT_patch
+Starting ./datasets_with_GT/pink_005001..10000.csv
+  Keyword: pink, GT column: GT_pink
+Starting ./datasets_with_GT/pink_010001..20000.csv
+  Keyword: pink, GT column: GT_pink
+Starting ./datasets_with_GT/pink_300000+.csv
+  Keyword: pink, GT column: GT_pink
+Starting ./datasets_with_GT/polyester_0..1000.csv
+  Keyword: polyester, GT column: GT_polyester
+Starting ./datasets_with_GT/polyester_001001..5000.csv
+  Keyword: polyester, GT column: GT_polyester
+Starting ./datasets_with_GT/polyester_005001..10000.csv
+  Keyword: polyester, GT column: GT_polyester
+Starting ./datasets_with_GT/polyester_010001..20000.csv
+  Keyword: polyester, GT column: GT_polyester
+Starting ./datasets_with_GT/polyester_020001..30000.csv
+  Keyword: polyester, GT column: GT_polyester
+Starting ./datasets_with_GT/polyester_030001..40000.csv
+  Keyword: polyester, GT column: GT_polyester
+Starting ./datasets_with_GT/polyester_150001..200000.csv
+  Keyword: polyester, GT column: GT_polyester
+Starting ./datasets_with_GT/polyester_300000+.csv
+  Keyword: polyester, GT column: GT_polyester
+Starting ./datasets_with_GT/purple_0..1000.csv
+  Keyword: purple, GT column: GT_purple
+Starting ./datasets_with_GT/purple_300000+.csv
+  Keyword: purple, GT column: GT_purple
+Starting ./datasets_with_GT/red_0..1000.csv
+  Keyword: red, GT column: GT_red
+Starting ./datasets_with_GT/red_300000+.csv
+  Keyword: red, GT column: GT_red
+Starting ./datasets_with_GT/retro_005001..10000.csv
+  Keyword: retro, GT column: GT_retro
+Starting ./datasets_with_GT/rose_0..1000.csv
+  Keyword: rose, GT column: GT_rose
+Starting ./datasets_with_GT/rose_300000+.csv
+  Keyword: rose, GT column: GT_rose
+Starting ./datasets_with_GT/satin_0..1000.csv
+  Keyword: satin, GT column: GT_satin
+Starting ./datasets_with_GT/satin_300000+.csv
+  Keyword: satin, GT column: GT_satin
+Starting ./datasets_with_GT/slip-on_0..1000.csv
+  Keyword: slip-on, GT column: GT_slip-on
+Starting ./datasets_with_GT/slip-on_300000+.csv
+  Keyword: slip-on, GT column: GT_slip-on
+Starting ./datasets_with_GT/solid_0..1000.csv
+  Keyword: solid, GT column: GT_solid
+Starting ./datasets_with_GT/solid_001001..5000.csv
+  Keyword: solid, GT column: GT_solid
+Starting ./datasets_with_GT/solid_005001..10000.csv
+  Keyword: solid, GT column: GT_solid
+Starting ./datasets_with_GT/solid_010001..20000.csv
+  Keyword: solid, GT column: GT_solid
+Starting ./datasets_with_GT/solid_020001..30000.csv
+  Keyword: solid, GT column: GT_solid
+Starting ./datasets_with_GT/solid_030001..40000.csv
+  Keyword: solid, GT column: GT_solid
+Starting ./datasets_with_GT/solid_300000+.csv
+  Keyword: solid, GT column: GT_solid
+Starting ./datasets_with_GT/steel_0..1000.csv
+  Keyword: steel, GT column: GT_steel
+Starting ./datasets_with_GT/tape_0..1000.csv
+  Keyword: tape, GT column: GT_tape
+Starting ./datasets_with_GT/tape_001001..5000.csv
+  Keyword: tape, GT column: GT_tape
+Starting ./datasets_with_GT/tape_005001..10000.csv
+  Keyword: tape, GT column: GT_tape
+Starting ./datasets_with_GT/vintage_001001..5000.csv
+  Keyword: vintage, GT column: GT_vintage
+Starting ./datasets_with_GT/vintage_005001..10000.csv
+  Keyword: vintage, GT column: GT_vintage
+Starting ./datasets_with_GT/vintage_300000+.csv
+  Keyword: vintage, GT column: GT_vintage
+Starting ./datasets_with_GT/white_0..1000.csv
+  Keyword: white, GT column: GT_white
+Starting ./datasets_with_GT/white_001001..5000.csv
+  Keyword: white, GT column: GT_white
+Starting ./datasets_with_GT/white_005001..10000.csv
+  Keyword: white, GT column: GT_white
+Starting ./datasets_with_GT/white_010001..20000.csv
+  Keyword: white, GT column: GT_white
+Starting ./datasets_with_GT/white_020001..30000.csv
+  Keyword: white, GT column: GT_white
+Starting ./datasets_with_GT/white_300000+.csv
+  Keyword: white, GT column: GT_white
